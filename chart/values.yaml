@@ -1,0 +1,27 @@
+replicaCount: 2
+
+image:
+  repository: benny
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8000
+  nodePort: 30080
+
+env:
+  PORT: "8000"
+
+ingress:
+  enabled: false
+  host: benny.local
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi

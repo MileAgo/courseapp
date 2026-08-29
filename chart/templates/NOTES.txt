@@ -1,0 +1,19 @@
+{{ .Chart.Name }} was deployed as release "{{ .Release.Name }}".
+
+Check the pods:
+  kubectl get pods -l app={{ include "benny-app.fullname" . }}
+
+{{- if eq .Values.service.type "LoadBalancer" }}
+
+Open the app:
+  http://localhost:{{ .Values.service.port }}
+{{- else if eq .Values.service.type "NodePort" }}
+
+Open the app:
+  http://localhost:{{ .Values.service.nodePort }}
+{{- else }}
+
+Open the app:
+  kubectl port-forward svc/{{ include "benny-app.fullname" . }} 8080:{{ .Values.service.port }}
+  http://localhost:8080
+{{- end }}
