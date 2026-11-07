@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'docker build -t %IMAGE_NAME%:%IMAGE_TAG% .'
+                bat 'docker build -t %IMAGE_NAME%:%IMAGE_TAG% -t %IMAGE_NAME%:latest .'
             }
         }
 
@@ -28,6 +28,7 @@ pipeline {
                 )]) {
                     bat 'echo %DOCKER_TOKEN% | docker login -u %DOCKER_USERNAME% --password-stdin'
                     bat 'docker push %IMAGE_NAME%:%IMAGE_TAG%'
+                    bat 'docker push %IMAGE_NAME%:latest'
                     bat 'docker logout'
                 }
             }

@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: benny
+  repository: mileag0/mydevopsproject
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -9,7 +9,6 @@ service:
   type: LoadBalancer
   port: 80
   targetPort: 8000
-  nodePort: 30080
 
 env:
   PORT: "8000"
