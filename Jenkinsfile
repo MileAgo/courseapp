@@ -33,5 +33,27 @@ pipeline {
                 }
             }
         }
+
+        stage('Update GitOps') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'github-creds',
+                    usernameVariable: 'GIT_USER',
+                    passwordVariable: 'GIT_TOKEN'
+                )]) {
+                    bat '''
+                        if exist gitops rmdir /s /q gitops
+                        git clone https://%GIT_USER%:%GIT_TOKEN%@github.com/MileAgo/courseapp-gitops.git gitops
+                        powershell -Command "(Get-Content gitops/benny-app/dev/values.yaml) -replace 'tag: .*', 'tag: ''%IMAGE_TAG%''' | Set-Content gitops/benny-app/dev/values.yaml"
+                        cd gitops
+                        git config user.name "jenkins"
+                        git config user.email "jenkins@localhost"
+                        git add benny-app/dev/values.yaml
+                        git commit -m "Update image tag to %IMAGE_TAG%"
+                        git push origin main
+                    '''
+                }
+            }
+        }
     }
 }
