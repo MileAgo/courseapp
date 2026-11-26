@@ -40,11 +40,13 @@ docker run --rm -e PORT=9000 -p 9000:9000 mileag0/mydevopsproject
 
 ## Jenkins pipeline
 
-The `Jenkinsfile` has three stages:
+The `Jenkinsfile` has these stages:
 
 1. **Checkout** - gets the code from the repository.
 2. **Build** - builds the image and tags it with the build number and `latest`.
-3. **Push** - logs in to Docker Hub and pushes both tags.
+3. **Security Scan** - scans the image with Trivy (run as a Docker container). The build fails on HIGH or CRITICAL vulnerabilities that have a fix available; unfixed ones in the base image are ignored.
+4. **Push** - logs in to Docker Hub and pushes both tags.
+5. **Update GitOps** - writes the new image tag to the GitOps repo so Argo CD deploys it.
 
 Setup needed in Jenkins:
 

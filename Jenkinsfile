@@ -19,6 +19,13 @@ pipeline {
             }
         }
 
+        stage('Security Scan') {
+            steps {
+                // fail the build on HIGH/CRITICAL vulnerabilities that have a fix available
+                bat 'docker run --rm -v //var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed --scanners vuln %IMAGE_NAME%:%IMAGE_TAG%'
+            }
+        }
+
         stage('Push') {
             steps {
                 withCredentials([usernamePassword(
